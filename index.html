@@ -1,0 +1,122 @@
+
+<!DOCTYPE html>
+<html lang="az">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Günay Programist</title>
+<style>
+*{box-sizing:border-box}
+body{margin:0;background:#edf5ff;color:#193858;font-family:Arial,sans-serif}
+header{text-align:center;background:white;padding:25px 8px;font-size:24px;font-weight:bold}
+header span{color:#1670db}
+main{max-width:440px;margin:24px auto;padding:22px;background:white;border-radius:20px;box-shadow:0 5px 24px #d4e5f8}
+h2{font-size:23px;margin-top:0}
+p{color:#667b91;line-height:1.6}
+label{display:block;font-weight:bold;margin:17px 0 8px}
+input[type=tel]{width:100%;padding:14px;border:1px solid #d4e0ee;border-radius:10px;font-size:16px}
+.screen{display:none}
+.screen.active{display:block}
+.package{display:block;width:100%;padding:15px;margin:9px 0;border:2px solid #dce6f4;border-radius:12px;background:white;text-align:left;font-size:16px;color:#193858}
+.package.active{border-color:#176de0;background:#edf5ff}
+.price{float:right;color:#176de0;font-weight:bold}
+.primary{width:100%;padding:16px;margin-top:18px;border:0;border-radius:11px;background:#176de0;color:white;font-weight:bold;font-size:16px}
+.secondary{width:100%;padding:13px;margin-top:10px;border:1px solid #d4e0ee;border-radius:10px;background:white}
+.info{padding:15px;background:#edf5ff;border-radius:12px;line-height:1.8;overflow-wrap:anywhere}
+</style>
+</head>
+<body>
+<header>GÜNAY <span>PROGRAMİST</span></header>
+<main>
+
+<section class="screen active" id="s1">
+<h2>Nömrə və paket seçimi</h2>
+<p>Telefon nömrələrini daxil edin və paket seçin.</p>
+<label>Sizin telefon nömrəniz</label>
+<input id="phone1" type="tel" inputmode="tel" placeholder="+994 XX XXX XX XX">
+<label>Digər telefon nömrəsi</label>
+<input id="phone2" type="tel" inputmode="tel" placeholder="+994 XX XXX XX XX">
+<label>Paket seçin</label>
+<button class="package active" data-month="1" data-price="20">1 AY <span class="price">20 AZN</span></button>
+<button class="package" data-month="6" data-price="45">6 AY <span class="price">45 AZN</span></button>
+<button class="package" data-month="10" data-price="60">10 AY <span class="price">60 AZN</span></button>
+<button class="primary" id="confirm">TƏSDİQ ET</button>
+</section>
+
+<section class="screen" id="s2">
+<h2>Seçiminiz</h2>
+<div class="info">
+Paket: <b id="months"></b><br>
+Məbləğ: <b id="price"></b><br>
+Telefon: <b id="number"></b>
+</div>
+<p>Davam etməzdən əvvəl seçiminizi yoxlayın.</p>
+<button class="primary" id="continue">DAVAM ET</button>
+<button class="secondary" id="back1">GERİ QAYIT</button>
+</section>
+
+<section class="screen" id="s3">
+<h2>Ödəniş məlumatları</h2>
+<div class="info">
+Ödəniş məbləği: <b id="payAmount"></b>
+<p>Ödəniş üçün yalnız təsdiqlənmiş və təhlükəsiz ödəniş üsulundan istifadə edin.</p>
+</div>
+<label>Ödəniş məlumatları</label>
+<p>Kart məlumatları üçün yer — ödəniş provayderi qoşulduqda burada göstərilə bilər.</p>
+<button class="primary" id="next3">NÖVBƏTİ MƏRHƏLƏ</button>
+<button class="secondary" id="back2">GERİ QAYIT</button>
+</section>
+
+<section class="screen" id="s4">
+<h2>Təhlükəsizlik yoxlaması</h2>
+<p>Zəhmət olmasa, robot olmadığınızı təsdiq edin.</p>
+<label><input type="checkbox" id="robot"> Mən robot deyiləm</label>
+<div class="info">
+Müraciət statusu ödəniş təsdiq edildikdən sonra yenilənməlidir.
+</div>
+<button class="primary" id="finish">TƏSDİQ ET</button>
+<button class="secondary" id="back3">GERİ QAYIT</button>
+<div id="result"></div>
+</section>
+
+</main>
+<script>
+let selected={month:1,price:20};
+const screens=document.querySelectorAll('.screen');
+function show(id){
+  screens.forEach(s=>s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+document.querySelectorAll('[data-month]').forEach(btn=>{
+  btn.onclick=()=>{
+    document.querySelectorAll('[data-month]').forEach(b=>b.classList.remove('active'));
+    btn.classList.add('active');
+    selected={month:Number(btn.dataset.month),price:Number(btn.dataset.price)};
+  };
+});
+document.getElementById('confirm').onclick=()=>{
+  const a=document.getElementById('phone1').value.trim();
+  const b=document.getElementById('phone2').value.trim();
+  if(!a||!b){alert('Hər iki telefon nömrəsini daxil edin.');return;}
+  document.getElementById('months').textContent=selected.month+' ay';
+  document.getElementById('price').textContent=selected.price+' AZN';
+  document.getElementById('number').textContent=a;
+  document.getElementById('payAmount').textContent=selected.price+' AZN';
+  show('s2');
+};
+document.getElementById('continue').onclick=()=>show('s3');
+document.getElementById('back1').onclick=()=>show('s1');
+document.getElementById('next3').onclick=()=>show('s4');
+document.getElementById('back2').onclick=()=>show('s2');
+document.getElementById('back3').onclick=()=>show('s3');
+document.getElementById('finish').onclick=()=>{
+  if(!document.getElementById('robot').checked){
+    alert('Zəhmət olmasa, təsdiq xanasını işarələyin.');
+    return;
+  }
+  document.getElementById('result').innerHTML=
+    '<p class="info">Yoxlama tamamlandı. Ödəniş bu səhifədə təsdiqlənməyib. Müraciətin statusunu rəsmi ödəniş sistemi vasitəsilə yoxlayın.</p>';
+};
+</script>
+</body>
+</html>
